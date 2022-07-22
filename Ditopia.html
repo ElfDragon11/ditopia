@@ -77,7 +77,7 @@
          font-weight: 300;
        }
        
-       #pac-input, #pac-input2 {
+       #pac-input, #pac-input2, #pac-input3, #pac-input4, #pac-input5{
          background-color: #fff;
          font-family: Roboto;
          font-size: 15px;
@@ -113,8 +113,20 @@
        .gmnoprint{
         display:none;
        }
+       .iconKeys{
+        height: 20px;
+       }
+       #addButton{
+        margin-top: 20px;
+        margin-left: 25px;
+        width: 150px;
+       }
        </style>
     <script>
+      var seenBoxes;
+      function onload(){
+        seenBoxes = 2;
+      }
     /**
         * @license
         * Copyright 2019 Google LLC. All Rights Reserved.
@@ -136,9 +148,15 @@
          // Create the search box and link it to the UI element.
         const input = document.getElementById("pac-input");
         const input2 = document.getElementById("pac-input2");
+        const input3 = document.getElementById("pac-input3");
+        const input4 = document.getElementById("pac-input4");
+        const input5 = document.getElementById("pac-input5");
         const inputBoxesContainer = document.getElementById("searchBoxes");
         const searchBox = new google.maps.places.SearchBox(input);
         const searchBox2 = new google.maps.places.SearchBox(input2);
+        const searchBox3 = new google.maps.places.SearchBox(input3);
+        const searchBox4 = new google.maps.places.SearchBox(input4);
+        const searchBox5 = new google.maps.places.SearchBox(input5);
 
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputBoxesContainer);
          // Bias the SearchBox results towards current map's viewport.
@@ -149,71 +167,14 @@
        
          let markers1 = [];
          let markers2 = [];
-       
-        function searchListener(MarkersArray, colorNum){
-           const places = searchBox.getPlaces();
-       
-           if (places.length == 0) {
-             return;
-           }
-       
-           // Clear out the old markers.
-           MarkersArray.forEach((marker) => {
-             marker.setMap(null);
-           });
-           MarkersArray = [];
-       
-           // For each place, get the icon, name and location.
-           const bounds = new google.maps.LatLngBounds();
-       
-           places.forEach((place) => {
-             if (!place.geometry || !place.geometry.location) {
-               console.log("Returned place contains no geometry");
-               return;
-             }
-             
-             // Create a marker for each place.
-             let markerURL = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png"; 
-             if(colorNum===1){
-                 markerURL = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-                 console.log(colorNum);
-             }else if(colorNum===2){
-                 markerURL = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-                 console.log(colorNum);
-             }else if(colorNum===3){
-                 markerURL = "http://maps.google.com/mapfiles/ms/icons/pink-dot.png";
-             }else if(colorNum===4){
-                 markerURL = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
-             }else if(colorNum===5){
-                 markerURL = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
-             }
-
-             MarkersArray.push(
-                new google.maps.Marker({
-                   position: place.geometry.location,
-                   icon: {
-                        url: markerURL+""
-                    },
-                   map,
-                     })
-             );
-             if (place.geometry.viewport) {
-               // Only geocodes have viewport.
-               bounds.union(place.geometry.viewport);
-             } else {
-               bounds.extend(place.geometry.location);
-             }
-           });
-           map.fitBounds(bounds);
-         }
-
-         searchBox.addListener("places_changed", () =>searchListener(markers1, 1));
-         searchBox2.addListener("places_changed", () =>searchListener(markers2, 2));
-
+         let markers3 = [];
+         let markers4 = [];
+         let markers5 = [];
 
          // Listen for the event fired when the user selects a prediction and retrieve
          // more details for that place.
-         /*searchBox.addListener("places_changed", () => {
+         //Search Box 1
+         searchBox.addListener("places_changed", () => {
            const places = searchBox.getPlaces();
        
            if (places.length == 0) {
@@ -239,10 +200,7 @@
              markers1.push(
                 new google.maps.Marker({
                    position: place.geometry.location,
-                   //label: "1",
-                   icon: {
-                             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                           },
+                   icon: {url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"},
                    map,
                      })
              );
@@ -254,9 +212,10 @@
              }
            });
            map.fitBounds(bounds);
-         });*/
+         });
          
-         /* searchBox2.addListener("places_changed", () => {
+         //Search Box 2
+         searchBox2.addListener("places_changed", () => {
            const places = searchBox2.getPlaces();
        
            if (places.length == 0) {
@@ -281,13 +240,132 @@
        
              // Create a marker for each place.
              markers2.push(
-             
                 new google.maps.Marker({
                    position: place.geometry.location,
-                   //label: "2",
-                   icon: {
-                             url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
-                           },
+                   icon: {url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"},
+                   map,
+                })
+             );
+             if (place.geometry.viewport) {
+               // Only geocodes have viewport.
+               bounds.union(place.geometry.viewport);
+             } else {
+               bounds.extend(place.geometry.location);
+             }
+           });
+           map.fitBounds(bounds);
+         });
+
+         // Search Box 3
+         searchBox3.addListener("places_changed", () => {
+           const places = searchBox3.getPlaces();
+       
+           if (places.length == 0) {
+             return;
+           }
+       
+           // Clear out the old markers.
+           markers3.forEach((marker) => {
+             marker.setMap(null);
+           });
+           markers3 = [];
+
+           // For each place, get the icon, name and location.
+           const bounds = new google.maps.LatLngBounds();
+       
+           places.forEach((place) => {
+             if (!place.geometry || !place.geometry.location) {
+               console.log("Returned place contains no geometry");
+               return;
+             }
+             // Create a marker for each place.
+             markers3.push(
+                new google.maps.Marker({
+                   position: place.geometry.location,
+                   icon: {url: "http://maps.google.com/mapfiles/ms/icons/pink-dot.png"},
+                   map,
+                })
+             );
+             if (place.geometry.viewport) {
+               // Only geocodes have viewport.
+               bounds.union(place.geometry.viewport);
+             } else {
+               bounds.extend(place.geometry.location);
+             }
+           });
+           map.fitBounds(bounds);
+         });
+         
+          // Search Box 4
+          searchBox4.addListener("places_changed", () => {
+           const places = searchBox4.getPlaces();
+       
+           if (places.length == 0) {
+             return;
+           }
+       
+           // Clear out the old markers.
+           markers4.forEach((marker) => {
+             marker.setMap(null);
+           });
+           markers4 = [];
+         
+           // For each place, get the icon, name and location.
+           const bounds = new google.maps.LatLngBounds();
+       
+           places.forEach((place) => {
+             if (!place.geometry || !place.geometry.location) {
+               console.log("Returned place contains no geometry");
+               return;
+             }
+       
+             // Create a marker for each place.
+             markers4.push(
+                new google.maps.Marker({
+                   position: place.geometry.location,
+                   icon: { url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"},
+                   map,
+                })
+             );
+             if (place.geometry.viewport) {
+               // Only geocodes have viewport.
+               bounds.union(place.geometry.viewport);
+             } else {
+               bounds.extend(place.geometry.location);
+             }
+           });
+           map.fitBounds(bounds);
+         });
+
+          // Search Box 5
+          searchBox5.addListener("places_changed", () => {
+           const places = searchBox5.getPlaces();
+       
+           if (places.length == 0) {
+             return;
+           }
+       
+           // Clear out the old markers.
+           markers5.forEach((marker) => {
+             marker.setMap(null);
+           });
+           markers5 = [];
+         
+       
+           // For each place, get the icon, name and location.
+           const bounds = new google.maps.LatLngBounds();
+       
+           places.forEach((place) => {
+             if (!place.geometry || !place.geometry.location) {
+               console.log("Returned place contains no geometry");
+               return;
+             }
+       
+             // Create a marker for each place.
+             markers5.push(
+                new google.maps.Marker({
+                   position: place.geometry.location,
+                   icon: {url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"},
                    map,
                      })
        
@@ -300,27 +378,80 @@
              }
            });
            map.fitBounds(bounds);
-         });*/
-       }
+         });
+
+        }
        
        window.initAutocomplete = initAutocomplete;
+
+       function addSearch(){
+        if(seenBoxes===2){
+          document.getElementById("SearchContainer3").hidden = false;
+          seenBoxes++;
+        }else if(seenBoxes===3){
+          document.getElementById("SearchContainer4").hidden = false;
+          seenBoxes++;
+        }else if(seenBoxes===4){
+          document.getElementById("SearchContainer5").hidden = false;
+          seenBoxes++;
+        }
+       }
         </script>
     <!-- jsFiddle will insert css and js -->
   </head>
-  <body>
+  <body onload="onload()">
     <div id="searchBoxes">
+      <article class="inputContainer">
+        <img class="iconKeys" src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="">
         <input
-        id="pac-input"
-        class="controls"
-        type="text"
-        placeholder="Search Box 1"
-      />
-      <input
-        id="pac-input2"
-        class="controls"
-        type="text"
-        placeholder="Search Box 2"
-      />
+          id="pac-input"
+          class="controls"
+          type="text"
+          placeholder="Search Box 1"
+        />
+      </article> 
+
+      <article class="inputContainer">
+        <img class="iconKeys" src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png" alt="">
+        <input
+          id="pac-input2"
+          class="controls"
+          type="text"
+          placeholder="Search Box 2"
+        />
+      </article>
+
+      <article class="inputContainer"  id="SearchContainer3" hidden>
+        <img class="iconKeys" src="http://maps.google.com/mapfiles/ms/icons/pink-dot.png" alt="">
+        <input
+          id="pac-input3"
+          class="controls"
+          type="text"
+          placeholder="Search Box 3"
+        />
+      </article>
+
+      <article class="inputContainer" id="SearchContainer4" hidden>
+        <img class="iconKeys" src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="">
+        <input
+          id="pac-input4"
+          class="controls"
+          type="text"
+          placeholder="Search Box 4"
+        />
+      </article>
+
+      <article class="inputContainer" id="SearchContainer5" hidden>
+        <img class="iconKeys" src="http://maps.google.com/mapfiles/ms/icons/green-dot.png" alt="">
+        <input
+          id="pac-input5"
+          class="controls"
+          type="text"
+          placeholder="Search Box 5"
+        />
+      </article>
+
+      <input id="addButton" type="button" value="Add Search Box" onclick="addSearch()">
     </div>
     <div id="map"></div>
 
